@@ -1,0 +1,80 @@
+    {% extends "base.html" %}
+    {% block content %}
+       {% if user.is_authenticated %}
+      Hi {{ user.username }}!
+      <a href="{% url 'logout' %}">logout</a>
+    {% else %}
+      <a href="{% url 'login' %}">login</a>
+      <a href="{% url 'register' %}">register</a>
+    {% endif %}
+
+     <div class="container">
+            <div class = "row">
+                {% if posts %}
+                {% for p in posts %}
+                <div class= "posted-message">
+                    <fieldset class="billboard-posted">
+                    <legend class="date-posted">{{p.created_date}}</legend>
+                    <div class="information">
+                        <div class="row">
+                           <div class = "title-div">
+                               <h2 class = "title-posted">{{p.title}}</h2>
+                           </div>
+                            <div class = "main-div">
+                                <p class = "main-posted"> {{p.text}}</p>
+                            </div>
+                            <div class="author-div">
+                                <p class="author-posted"> {{p.author}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    </fieldset>
+                </div>
+                {% endfor %}
+                <div class= "add-message clickable">
+                    <div class="green-box">
+                        <i class="fa fa-plus add-white pulse" aria-hidden="true"></i>
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-messages">
+                    <h4> No Messages...</h4>
+                    <h4>Click the '+' button to add a new message</h4>
+                </div>
+                    <div class= "add-message clickable">
+                        <div class="green-box">
+                            <i class="fa fa-plus add-white pulse" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                {% endif %}
+        </div>
+    </div>
+
+    <div class="container empty-post">
+        <div class = "row">
+            <div class= "message">
+                <form class="form-message" method="POST" action = "{% url "post_new" %}">
+                            {% csrf_token %}
+                    <fieldset class="billboard-post">
+                    <legend class="date">{% now "SHORT_DATETIME_FORMAT" %}</legend>
+                    <div class="control-group">
+                            <label> <input class = "post-title" type="text" placeholder="Title" name="title"> </label>
+                            <label><textarea class= "post-main-message" type="text" placeholder="Your message here" name="text"></textarea></label>
+                            <label><input class= "post-author" type="text" placeholder="Author" name = "author"></label>
+                    </div>
+                    </fieldset>
+
+                    <div class= "approve-message">
+                        <div class="leave-message">
+                            <i class="fa fa-times cross" aria-hidden="true"></i>
+                        </div>
+                        <button class="keep-message" type="submit">
+                            <i class="fa fa-check tick" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}
